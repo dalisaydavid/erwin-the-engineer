@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scripts/Navigation1.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 66.6925, 67.2935 )
+
+[sub_resource type="NavigationPolygon" id=1]
+vertices = PoolVector2Array( 0, 0, 1020, 0, 1020, 600, 0, 600 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+outlines = [ PoolVector2Array( 0, 0, 1020, 0, 1020, 600, 0, 600 ) ]
+
+[node name="Navigation1" type="Navigation2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Character" type="Sprite" parent="."]
+position = Vector2( 63.3075, 537.294 )
+texture = ExtResource( 2 )
+
+[node name="StaticBody2D" type="KinematicBody2D" parent="Character"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Character/StaticBody2D"]
+shape = SubResource( 2 )
+
+[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="."]
+navpoly = SubResource( 1 )

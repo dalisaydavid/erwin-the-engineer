@@ -1,0 +1,43 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scripts/NPC.gd" type="Script" id=1]
+[ext_resource path="res://assets/frog_01.png" type="Texture" id=2]
+[ext_resource path="res://assets/frog_02.png" type="Texture" id=3]
+[ext_resource path="res://assets/Dungeon_Tileset.png" type="Texture" id=4]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "default",
+"speed": 3.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 20.0
+
+[node name="NPC" type="Node2D" groups=[
+"black_holeable",
+"npc",
+]]
+script = ExtResource( 1 )
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+
+[node name="AliveSprite" type="AnimatedSprite" parent="KinematicBody2D"]
+frames = SubResource( 1 )
+playing = true
+flip_h = true
+
+[node name="ObjectSprite" type="Sprite" parent="KinematicBody2D"]
+visible = false
+position = Vector2( 0, -1.25 )
+scale = Vector2( 3.33333, 3.125 )
+texture = ExtResource( 4 )
+flip_h = true
+region_enabled = true
+region_rect = Rect2( 50, 130, 12, 12 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
+rotation = 1.5708
+shape = SubResource( 2 )

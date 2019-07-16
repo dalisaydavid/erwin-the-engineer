@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scripts/Player.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 30, 30 )
+
+[node name="Player" type="Node2D"]
+script = ExtResource( 1 )
+walk_speed = 20000
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="KinematicBody2D"]
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
+shape = SubResource( 1 )
+
+[node name="upPosition" type="Position2D" parent="KinematicBody2D"]
+position = Vector2( 0, -60 )
+
+[node name="leftPosition" type="Position2D" parent="KinematicBody2D"]
+position = Vector2( -60, 0 )
+
+[node name="rightPosition" type="Position2D" parent="KinematicBody2D"]
+position = Vector2( 60, 0 )
+
+[node name="downPosition" type="Position2D" parent="KinematicBody2D"]
+position = Vector2( 0, 60 )
