@@ -1,10 +1,97 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scripts/Player.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://assets/erwin.png" type="Texture" id=3]
+[ext_resource path="res://assets/vortex_gun.png" type="Texture" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 30, 30 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "GunShoot"
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("KinematicBody2D/ErwinGun:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4 ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "Idle"
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("KinematicBody2D/ErwinBody:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.16, 0.4, 0.6, 0.8, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 0, 1, 2, 3, 5 ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "Move"
+length = 0.75
+loop = true
+step = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath("KinematicBody2D/ErwinBody:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3, 0.45, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 6, 7, 8, 9, 10 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "GunShoot"
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("KinematicBody2D/ErwinGun:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4 ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "Move"
+length = 0.75
+loop = true
+step = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath("KinematicBody2D/ErwinBody:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.3, 0.45, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 6, 7, 8, 9, 10 ]
+}
 
 [node name="Player" type="Node2D"]
 script = ExtResource( 1 )
@@ -13,8 +100,20 @@ walk_speed = 20000
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
 
 [node name="Sprite" type="Sprite" parent="KinematicBody2D"]
+visible = false
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
+
+[node name="ErwinBody" type="Sprite" parent="KinematicBody2D"]
+scale = Vector2( 2.5, 2.5 )
+texture = ExtResource( 3 )
+hframes = 11
+
+[node name="ErwinGun" type="Sprite" parent="KinematicBody2D"]
+position = Vector2( -4.5, 12.5 )
+scale = Vector2( 2.5, 2.5 )
+texture = ExtResource( 4 )
+hframes = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
 shape = SubResource( 1 )
@@ -23,10 +122,24 @@ shape = SubResource( 1 )
 position = Vector2( 0, -60 )
 
 [node name="leftPosition" type="Position2D" parent="KinematicBody2D"]
-position = Vector2( -60, 0 )
+position = Vector2( -34, 15 )
 
 [node name="rightPosition" type="Position2D" parent="KinematicBody2D"]
-position = Vector2( 60, 0 )
+position = Vector2( 32, 15 )
 
 [node name="downPosition" type="Position2D" parent="KinematicBody2D"]
 position = Vector2( 0, 60 )
+
+[node name="DamageTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="ErwinBodyAnimationPlayer" type="AnimationPlayer" parent="."]
+anims/GunShoot = SubResource( 3 )
+anims/Idle = SubResource( 6 )
+anims/Move = SubResource( 2 )
+
+[node name="ErwinGunAnimationPlayer" type="AnimationPlayer" parent="."]
+anims/GunShoot = SubResource( 4 )
+anims/Move = SubResource( 5 )
+[connection signal="animation_finished" from="ErwinBodyAnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_finished" from="ErwinGunAnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

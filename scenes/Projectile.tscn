@@ -3,17 +3,18 @@
 [ext_resource path="res://scripts/Projectile.gd" type="Script" id=1]
 [ext_resource path="res://assets/black_hole_1.png" type="Texture" id=2]
 
-[sub_resource type="RectangleShape2D" id=8]
-extents = Vector2( 27.1654, 28.0934 )
+[sub_resource type="CircleShape2D" id=1]
+radius = 30.0
 
-[sub_resource type="CircleShape2D" id=7]
+[sub_resource type="CircleShape2D" id=2]
 radius = 21.457
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 117.547
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=4]
 resource_name = "ChangeSize"
+length = 1.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("KinematicBody2D/Sprite:scale")
 tracks/0/interp = 1
@@ -21,10 +22,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 1, 1.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0.2, 0.2 ), Vector2( 0.75, 0.75 ) ]
+"values": [ Vector2( 0.2, 0.2 ), Vector2( 1.5, 1.5 ), Vector2( 0.2, 0.2 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("KinematicBody2D/Sprite:rotation_degrees")
@@ -55,35 +56,39 @@ tracks/2/keys = {
 "projectile",
 ]]
 script = ExtResource( 1 )
+point_path = "res://scenes/Point.tscn"
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+scale = Vector2( 0.5, 0.5 )
 
 [node name="Sprite" type="Sprite" parent="KinematicBody2D"]
 modulate = Color( 1, 1, 1, 0.254902 )
+rotation = 6.28319
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
-shape = SubResource( 8 )
+shape = SubResource( 1 )
 
 [node name="Area2D" type="Area2D" parent="KinematicBody2D"]
 scale = Vector2( 1, 1.08 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D/Area2D"]
 scale = Vector2( 1.65, 1.65 )
-shape = SubResource( 7 )
+shape = SubResource( 2 )
 
 [node name="DimensionHole" type="Area2D" parent="KinematicBody2D"]
+scale = Vector2( 2, 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D/DimensionHole"]
 shape = SubResource( 3 )
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 3.0
+wait_time = 0.4
 one_shot = true
 autostart = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/ChangeSize = SubResource( 6 )
+anims/ChangeSize = SubResource( 4 )
 [connection signal="body_entered" from="KinematicBody2D/Area2D" to="." method="_on_Area2D_body_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
