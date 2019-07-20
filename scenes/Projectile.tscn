@@ -7,10 +7,10 @@
 radius = 30.0
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 21.457
+radius = 25.4945
 
 [sub_resource type="CircleShape2D" id=3]
-radius = 117.547
+radius = 96.2852
 
 [sub_resource type="Animation" id=4]
 resource_name = "ChangeSize"
@@ -63,7 +63,6 @@ scale = Vector2( 0.5, 0.5 )
 
 [node name="Sprite" type="Sprite" parent="KinematicBody2D"]
 modulate = Color( 1, 1, 1, 0.254902 )
-rotation = 6.28319
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 2 )
 
@@ -84,11 +83,11 @@ scale = Vector2( 2, 2 )
 shape = SubResource( 3 )
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.4
-one_shot = true
+wait_time = 3.0
 autostart = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/ChangeSize = SubResource( 4 )
 [connection signal="body_entered" from="KinematicBody2D/Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

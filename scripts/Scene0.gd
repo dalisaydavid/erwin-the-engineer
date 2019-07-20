@@ -1,10 +1,13 @@
 extends Node2D
 
 export var is_friendly_dimension_on = 0
+export var time_to_finish = 60
+var countdown_timer
 export(String, FILE, '*tscn') var next_scene_path
 signal scene_finished
 var is_scene_finished = false
 export var scene_message = 'Scene Finished! (Press 0 to continue)'
+var max_number_of_npcs
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$Player.connect('dimension_changed', self, '_on_Player_dimension_changed')
@@ -12,6 +15,17 @@ func _ready():
 	self.connect('scene_finished', self, 'set_scene_finished')
 	set_process_input(true)
 	set_process(true)
+	
+	max_number_of_npcs = get_tree().get_nodes_in_group('npc').size()
+
+	create_downtown_timer(60)
+	
+func create_downtown_timer(seconds):
+	countdown_timer = Timer.new()
+	countdown_timer.wait_time = 60.0
+	countdown_timer.connect('timeout', self, '_on_countdown_timer_timeout')
+	add_child(countdown_timer)
+	countdown_timer.start()
 
 func _process(delta):
 	check_scene_finished()
@@ -30,7 +44,6 @@ func check_scene_finished():
 	if len(npcs) == 0:
 		emit_signal('scene_finished')
 		is_scene_finished = true
-		
 
 func _on_Player_dimension_changed():
 	is_friendly_dimension_on = not is_friendly_dimension_on

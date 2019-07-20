@@ -1,7 +1,7 @@
 extends Node2D
 
 export var is_alive = 1
-export var walk_speed = 100 
+var walk_speed = 120
 export (NodePath) var patrol_path
 var patrol_points
 var patrol_index = 0
@@ -9,38 +9,59 @@ var velocity
 var target
 var can_move = true
 var direction = Vector2(0, 0)
+export var wait_time = 3
+export var move_randomly = true
 signal dimension_changed
+export (NodePath) var player_path
+var player
+var is_following
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	set_process(true)
+	set_physics_process(true)
 	get_tree().get_root().get_node('Root/Player').connect('dimension_changed', self, '_on_Player_dimension_changed')
-	
+	get_tree().get_root().get_node('Root/Start').connect('player_started', self, 'can_follow')
 	if patrol_path:
 		patrol_points = get_node(patrol_path).curve.get_baked_points()
 		
 	show_sprite_types()
 	
-	$MoveTimer.wait_time = (randi() % 5) + 1
+	$MoveTimer.wait_time = (randi() % wait_time)+1
 	$MoveTimer.connect('timeout', self, '_on_MoveTimer_timeout')
+	
 	$AnimationPlayer.play('Jump')
+	
+	if player_path:
+		player = get_node(player_path)
+		
+	is_following = false
+
+func can_follow():
+	is_following = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	if is_alive:
+func _physics_process(delta):
+	if player_path and is_following:
+		follow_move(delta)
+	elif move_randomly:
 		random_move()
+	else:
+		move_on_path(delta)
 #	handle_movement(delta)
-#	var velocity = Vector2(walk_speed,0)
-#	var motion = velocity * delta
-#	$KinematicBody2D.move_and_collide(motion)
 
-func handle_movement(delta):
+func follow_move(delta):
+	var dir = (player.get_node('KinematicBody2D').global_position - $KinematicBody2D.global_position).normalized()
+	$KinematicBody2D.move_and_slide(dir*walk_speed) 
+
+func move_on_path(delta):
 	if not is_alive:
 		return
 		
 	if not patrol_path:
 	    return
 		
+	var velocity = Vector2(walk_speed,0)
+	var motion = velocity * delta
 	var target = patrol_points[patrol_index]
 	if $KinematicBody2D.global_position.distance_to(target) < 1:
 	    patrol_index = wrapi(patrol_index + 1, 0, patrol_points.size())
@@ -56,7 +77,7 @@ func handle_movement(delta):
 func _on_MoveTimer_timeout():
 	if not can_move:
 		can_move = true
-		direction = Vector2(random(), random()).normalized()
+		direction = Vector2(random(), 0).normalized()
 	else:
 		can_move = false
 
@@ -90,13 +111,8 @@ func toggle_type():
 	is_alive = not is_alive
 	
 	show_sprite_types()
-	# set_collision()
 	set_path()
-	
-	#$Timer.start()
-	
 	emit_signal('dimension_changed')
-
 
 func _on_Player_dimension_changed():
 	toggle_type()
@@ -114,6 +130,9 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == 'Fall':
 		queue_free()
 
-
 func _on_AnimationPlayer_animation_started(anim_name):
 	pass
+
+func _on_EarshotArea_body_entered(body):
+	pass
+		

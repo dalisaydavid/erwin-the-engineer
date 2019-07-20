@@ -27,3 +27,10 @@ func _ready():
 func _on_RiseEffect_tween_completed(object, key):
 	pass
 	#queue_free()
+
+
+func _on_CollectArea_body_entered(body):
+	if body.get_parent().get_name () == 'Player':
+		body.get_parent().projectile_type = 'vortex'
+	
+		queue_free()

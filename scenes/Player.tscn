@@ -1,14 +1,18 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scripts/Player.gd" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
 [ext_resource path="res://assets/erwin.png" type="Texture" id=3]
 [ext_resource path="res://assets/vortex_gun.png" type="Texture" id=4]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 30, 30 )
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 16.5677
+height = 28.9447
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="CircleShape2D" id=7]
+radius = 229.369
+
+[sub_resource type="Animation" id=2]
 resource_name = "GunShoot"
 step = 0.2
 tracks/0/type = "value"
@@ -24,7 +28,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=3]
 resource_name = "Idle"
 loop = true
 step = 0.2
@@ -41,8 +45,7 @@ tracks/0/keys = {
 "values": [ 0, 0, 1, 2, 3, 5 ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "Move"
+[sub_resource type="Animation" id=4]
 length = 0.75
 loop = true
 step = 0.15
@@ -59,8 +62,7 @@ tracks/0/keys = {
 "values": [ 6, 7, 8, 9, 10 ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "GunShoot"
+[sub_resource type="Animation" id=5]
 step = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("KinematicBody2D/ErwinGun:frame")
@@ -75,8 +77,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "Move"
+[sub_resource type="Animation" id=6]
 length = 0.75
 loop = true
 step = 0.15
@@ -116,6 +117,7 @@ texture = ExtResource( 4 )
 hframes = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
+position = Vector2( 0, 6 )
 shape = SubResource( 1 )
 
 [node name="upPosition" type="Position2D" parent="KinematicBody2D"]
@@ -130,16 +132,24 @@ position = Vector2( 32, 15 )
 [node name="downPosition" type="Position2D" parent="KinematicBody2D"]
 position = Vector2( 0, 60 )
 
+[node name="BlinkRange" type="Area2D" parent="KinematicBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D/BlinkRange"]
+position = Vector2( 1, 7 )
+shape = SubResource( 7 )
+
 [node name="DamageTimer" type="Timer" parent="."]
 wait_time = 2.0
 
 [node name="ErwinBodyAnimationPlayer" type="AnimationPlayer" parent="."]
-anims/GunShoot = SubResource( 3 )
-anims/Idle = SubResource( 6 )
-anims/Move = SubResource( 2 )
+anims/GunShoot = SubResource( 2 )
+anims/Idle = SubResource( 3 )
+anims/Move = SubResource( 4 )
 
 [node name="ErwinGunAnimationPlayer" type="AnimationPlayer" parent="."]
-anims/GunShoot = SubResource( 4 )
-anims/Move = SubResource( 5 )
+anims/GunShoot = SubResource( 5 )
+anims/Move = SubResource( 6 )
+[connection signal="mouse_entered" from="KinematicBody2D/BlinkRange" to="." method="_on_BlinkRange_mouse_entered"]
+[connection signal="mouse_exited" from="KinematicBody2D/BlinkRange" to="." method="_on_BlinkRange_mouse_exited"]
 [connection signal="animation_finished" from="ErwinBodyAnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
 [connection signal="animation_finished" from="ErwinGunAnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

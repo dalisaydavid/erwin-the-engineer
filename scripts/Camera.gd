@@ -4,7 +4,6 @@ export (NodePath) var player_path
 var player
 var shake_on
 export var shake_amount = 1.5
-export var shake_timer = 2.0
 
 func _ready():
 	set_process(true)
