@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Merlin_-_01_-_To_a_Higher_Dimension_GWJ_July.ogg-3fa0242d2290932d194370a84533289a.oggstr"
+
+[deps]
+
+source_file="res://assets/Merlin_-_01_-_To_a_Higher_Dimension_GWJ_July.ogg"
+dest_files=[ "res://.import/Merlin_-_01_-_To_a_Higher_Dimension_GWJ_July.ogg-3fa0242d2290932d194370a84533289a.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

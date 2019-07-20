@@ -18,11 +18,11 @@ func _ready():
 	
 	max_number_of_npcs = get_tree().get_nodes_in_group('npc').size()
 
-	create_downtown_timer(60)
+	create_downtown_timer(time_to_finish)
 	
 func create_downtown_timer(seconds):
 	countdown_timer = Timer.new()
-	countdown_timer.wait_time = 60.0
+	countdown_timer.wait_time = seconds
 	countdown_timer.connect('timeout', self, '_on_countdown_timer_timeout')
 	add_child(countdown_timer)
 	countdown_timer.start()
@@ -47,4 +47,7 @@ func check_scene_finished():
 
 func _on_Player_dimension_changed():
 	is_friendly_dimension_on = not is_friendly_dimension_on
+	
+func _on_countdown_timer_timeout():
+	get_tree().quit()
 	

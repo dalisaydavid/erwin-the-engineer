@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Merlin_-03_-_Strange_place_GWJ_July.ogg-6605deeb49abcad02a816fe85cf2baa2.oggstr"
+
+[deps]
+
+source_file="res://assets/Merlin_-03_-_Strange_place_GWJ_July.ogg"
+dest_files=[ "res://.import/Merlin_-03_-_Strange_place_GWJ_July.ogg-6605deeb49abcad02a816fe85cf2baa2.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

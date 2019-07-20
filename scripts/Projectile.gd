@@ -14,6 +14,9 @@ func _ready():
 	set_process(true)
 	
 	max_number_of_npcs = get_tree().get_root().get_node('Root').max_number_of_npcs
+
+func set_velocity_towards_position(from_position, end_position):
+	velocity = (end_position - from_position).normalized() * move_speed
 	
 func _process(delta):
 	var camera = get_tree().get_root().get_node('Root/Camera')

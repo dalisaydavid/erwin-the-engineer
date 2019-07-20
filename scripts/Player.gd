@@ -14,8 +14,10 @@ var normal_modulate
 signal damaged
 signal shot_projectile
 var projectile_type = 'vortex'
+var mouse_projectile_position
 var is_invincible = false
 var mouse_in_blink_range = false
+export var max_ammo = 10
 
 func _ready():
 	# Called when the node is added to the scene for the first time.
@@ -51,6 +53,7 @@ func _physics_process(delta):
 		
 	$KinematicBody2D.move_and_slide(motion)
 
+
 func toggle_dimension():
 	emit_signal('dimension_changed')
 
@@ -70,25 +73,24 @@ func _input(event):
 		blink('down')
 	
 
-
 func can_blink(potential_position):
 	var tile_position = get_tree().get_root().get_node('Root/DungeonTilemap').world_to_map(potential_position)
 	var tile = get_tree().get_current_scene().get_node('DungeonTilemap').get_cellv(tile_position)
 	return tile == 0
 
 func blink(direction):
-	if ammo < 0:
+	if ammo < 2:
 		return
 		
 	# Create projectile before blinking.
 	var new_projectile = projectile_scene.instance()
-	new_projectile.connect('imploded', self, 'increase_ammo')
+	new_projectile.connect('imploded', self, 'increase_ammo_after_blink')
 #	new_projectile.set_direction(last_direction)
 #	new_projectile.type = projectile_type
 #	var projectile_spawn = $KinematicBody2D.get_node(last_direction + 'Position')
 	new_projectile.global_position = Vector2($KinematicBody2D.global_position.x, $KinematicBody2D.global_position.y)
 	get_parent().add_child(new_projectile)
-	decrease_ammo()
+	decrease_ammo(2)
 	emit_signal('shot_projectile')
 	
 	# Blink to new location.
@@ -108,11 +110,24 @@ func blink(direction):
 	
 	
 func increase_ammo():
+	if ammo >= max_ammo:
+		return
+		
 	ammo += 1
 	emit_signal('ammo_changed')
 	
-func decrease_ammo():
-	ammo -= 1
+func increase_ammo_after_blink():
+	if ammo >= max_ammo:
+		return
+		
+	ammo += 2
+	emit_signal('ammo_changed')
+	
+func decrease_ammo(amount=1):
+	if ammo <= 0:
+		return
+		
+	ammo -= amount
 	emit_signal('ammo_changed')
 
 func shoot_projectile_animation():
@@ -122,6 +137,8 @@ func shoot_projectile():
 	var new_projectile = projectile_scene.instance()
 	new_projectile.connect('imploded', self, 'increase_ammo')
 	new_projectile.set_direction(last_direction)
+#	mouse_projectile_position = get_global_mouse_position()
+#	new_projectile.set_velocity_towards_position($KinematicBody2D.global_position, mouse_projectile_position)
 	new_projectile.type = projectile_type
 	var projectile_spawn = $KinematicBody2D.get_node(last_direction + 'Position')
 	new_projectile.global_position = Vector2(projectile_spawn.global_position.x, projectile_spawn.global_position.y)
