@@ -67,6 +67,7 @@ func implode_object(object, number_total_bodies):
 			root.add_child(new_point)
 			new_point.global_position = object.get_node('KinematicBody2D').global_position
 
+	object.is_alive = false
 	object.get_node('AnimationPlayer').play('Fall')
 
 func implode():
