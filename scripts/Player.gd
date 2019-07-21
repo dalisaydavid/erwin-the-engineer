@@ -151,19 +151,62 @@ func shoot_projectile():
 	decrease_ammo()
 	emit_signal('shot_projectile')
 
+var keys_pressed = []
+
+
+
+func update_pressed(key_id, append=false):
+	var key = keys_pressed.find(key_id)
+	if key == -1 and append:
+		keys_pressed.append(key_id)
+	
+	if key != -1 and not append:
+		keys_pressed.remove(key)
+
 func handle_movement():
+	
+	# Process input before handling it to prevent priority problem
 	if (Input.is_key_pressed(KEY_A)):
-		velocity.x = -walk_speed
-		last_direction = 'left'
-	elif (Input.is_key_pressed(KEY_D)):
-		velocity.x =  walk_speed
-		last_direction = 'right'
-	elif (Input.is_key_pressed(KEY_W)):
-		velocity.y = -walk_speed
-		last_direction = 'up'
-	elif (Input.is_key_pressed(KEY_S)):
-		velocity.y =  walk_speed
-		last_direction = 'down'
+		update_pressed('left', true)
+	else:
+		update_pressed('left')
+		
+	if (Input.is_key_pressed(KEY_D)):
+		update_pressed('right', true)
+	else:
+		update_pressed('right')
+		
+	if (Input.is_key_pressed(KEY_W)):
+		update_pressed('up', true)
+	else:
+		update_pressed('up')
+		
+	if (Input.is_key_pressed(KEY_S)):
+		update_pressed('down', true)
+	else:
+		update_pressed('down')
+	
+	# Handle only last input
+	var last_pressed = keys_pressed.back()
+	if last_pressed:
+		
+		if (last_pressed == 'left'):
+			velocity.x = -walk_speed
+			velocity.y = 0
+		
+		if (last_pressed == 'right'):
+			velocity.x = walk_speed
+			velocity.y = 0
+		
+		if (last_pressed == 'up'):
+			velocity.x = 0
+			velocity.y = -walk_speed
+		
+		if (last_pressed == 'down'):
+			velocity.x = 0
+			velocity.y = walk_speed
+		
+		last_direction = last_pressed
 
 func damage(amount):
 	if is_invincible:
