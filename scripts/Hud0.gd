@@ -9,6 +9,7 @@ func _ready():
 	player = get_node(player_path)
 	player.connect('ammo_changed', self, 'display_ammo')
 	player.connect('damaged', self, 'display_health')
+	player.connect('healed', self, 'display_health')
 
 	root = get_tree().get_root().get_node('Root')
 	root.connect('scene_finished', self, 'display_scene_finished')

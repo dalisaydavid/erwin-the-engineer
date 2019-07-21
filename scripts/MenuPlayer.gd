@@ -32,34 +32,7 @@ func _ready():
 	$DamageTimer.connect('timeout', self, 'change_color_to_normal')
 	
 func _physics_process(delta):
-	if health <= 0:
-		get_tree().get_root().get_node('Root').game_over()
-		
-	# Handle movement inputs every frame.
-	velocity.y = 0
-	velocity.x = 0
-
-	handle_movement()
-	motion = velocity * delta
-	
-	if velocity.x == 0 and velocity.y == 0:
-		pass
-	elif last_direction == 'left':
-		$KinematicBody2D/ErwinBody.flip_h = false
-		$KinematicBody2D/ErwinGun.flip_h = false
-	elif last_direction == 'right':
-		$ErwinBodyAnimationPlayer.play('Move')
-	elif last_direction in ['right', 'up', 'down']:
-		$KinematicBody2D/ErwinBody.flip_h = true
-		$KinematicBody2D/ErwinGun.flip_h = true
-
-		
-	if abs(velocity.x) > 0.01 or abs(velocity.y) > 0.01:
-		play_animation('Move')
-	else:
-		play_animation('Idle')
-		
-	$KinematicBody2D.move_and_slide(motion)
+	pass
 
 
 func toggle_dimension():
@@ -160,66 +133,19 @@ func shoot_projectile():
 	decrease_ammo()
 	emit_signal('shot_projectile')
 
-var keys_pressed = []
-
-
-
-func update_pressed(key_id, append=false):
-	var key = keys_pressed.find(key_id)
-	if key == -1 and append:
-		keys_pressed.append(key_id)
-	
-	if key != -1 and not append:
-		keys_pressed.remove(key)
-
 func handle_movement():
-	
-	# Process input before handling it to prevent priority problem
 	if (Input.is_key_pressed(KEY_A)):
-		update_pressed('left', true)
-	else:
-		update_pressed('left')
-		
-	if (Input.is_key_pressed(KEY_D)):
-		update_pressed('right', true)
-	else:
-		update_pressed('right')
-		
-	if (Input.is_key_pressed(KEY_W)):
-		update_pressed('up', true)
-	else:
-		update_pressed('up')
-		
-	if (Input.is_key_pressed(KEY_S)):
-		update_pressed('down', true)
-	else:
-		update_pressed('down')
-	
-	# if none was pressed
-	if keys_pressed.size() == 0:
-		return
-		
-	# Handle only last input
-	var last_pressed = keys_pressed.back()
-	if last_pressed:
-		
-		if (last_pressed == 'left'):
-			velocity.x = -walk_speed
-			velocity.y = 0
-		
-		if (last_pressed == 'right'):
-			velocity.x = walk_speed
-			velocity.y = 0
-		
-		if (last_pressed == 'up'):
-			velocity.x = 0
-			velocity.y = -walk_speed
-		
-		if (last_pressed == 'down'):
-			velocity.x = 0
-			velocity.y = walk_speed
-		
-		last_direction = last_pressed
+		velocity.x = -walk_speed
+		last_direction = 'left'
+	elif (Input.is_key_pressed(KEY_D)):
+		velocity.x =  walk_speed
+		last_direction = 'right'
+	elif (Input.is_key_pressed(KEY_W)):
+		velocity.y = -walk_speed
+		last_direction = 'up'
+	elif (Input.is_key_pressed(KEY_S)):
+		velocity.y =  walk_speed
+		last_direction = 'down'
 
 func damage(amount):
 	if is_invincible:
@@ -251,6 +177,5 @@ func _on_BlinkRange_mouse_exited():
 	mouse_in_blink_range = false
 
 
-func play_animation(anim):
-	if $ErwinBodyAnimationPlayer.current_animation != anim:
-		$ErwinBodyAnimationPlayer.play(anim)
+func _on_ShootTimer_timeout():
+	shoot_projectile_animation()

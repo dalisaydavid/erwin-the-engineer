@@ -63,8 +63,8 @@ tracks/0/keys = {
 }
 
 [node name="NPC" type="Node2D" groups=[
-"black_holeable",
 "npc",
+"black_holeable",
 ]]
 script = ExtResource( 1 )
 
