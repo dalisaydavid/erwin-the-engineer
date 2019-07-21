@@ -50,7 +50,10 @@ func _physics_process(delta):
 
 func follow_move(delta):
 	var dir = (player.get_node('KinematicBody2D').global_position - $KinematicBody2D.global_position).normalized()
-	$KinematicBody2D.move_and_slide(dir*walk_speed) 
+	velocity = dir*walk_speed
+	$KinematicBody2D.move_and_slide(velocity)
+	detect_state(velocity) 
+	
 
 func move_on_path(delta):
 	
@@ -67,13 +70,9 @@ func move_on_path(delta):
 	    patrol_index = wrapi(patrol_index + 1, 0, patrol_points.size())
 	    target = patrol_points[patrol_index]
 	velocity = (target - $KinematicBody2D.global_position).normalized() * walk_speed
-	if velocity.y < 0:
-		$KinematicBody2D/AliveSprite.flip_h = false
-	else:
-		$KinematicBody2D/AliveSprite.flip_h = true
 	
-	detect_state(velocity)
 	$KinematicBody2D.move_and_slide(velocity)
+	detect_state(velocity)
 
 
 func _on_MoveTimer_timeout():
@@ -89,13 +88,8 @@ func random():
 
 func random_move():
 	var	velocity = direction*walk_speed
-	detect_state(velocity)
 	$KinematicBody2D.move_and_slide(velocity)
-
-	if direction.x < 0:
-		$KinematicBody2D/AliveSprite.flip_h = false
-	else:
-		$KinematicBody2D/AliveSprite.flip_h = true
+	detect_state(velocity)
 
 
 func show_sprite_types():
@@ -111,6 +105,7 @@ func set_collision():
 func set_path():
 	if is_alive and patrol_path:
 		patrol_points = get_node(patrol_path).curve.get_baked_points()
+	
 
 func toggle_type():
 	is_alive = not is_alive
@@ -129,6 +124,8 @@ func _on_DamageArea_body_entered(body):
 		body.get_parent().damage(1)
 		
 func play_fall_animation():
+	print('FALLING')
+	is_alive = false
 	play_animation('Fall')
 
 func _on_AnimationPlayer_animation_finished(anim_name):
@@ -142,11 +139,19 @@ func _on_EarshotArea_body_entered(body):
 	pass
 	
 func detect_state(velocity):
+	
+	if not is_alive:
+		return
+	
+	if velocity.x < 0:
+		$KinematicBody2D/AliveSprite.flip_h = false
+	else:
+		$KinematicBody2D/AliveSprite.flip_h = true
+	
 	if abs(velocity.x) > 0.01 or abs(velocity.y) > 0.01:
 		play_animation('Jump')
 	else:
-		if $AnimationPlayer.current_animation != 'Fall':
-			play_animation('Idle')
+		play_animation('Idle')
 	
 func play_animation(anim):
 	if $AnimationPlayer.current_animation != anim:

@@ -96,6 +96,7 @@ script = ExtResource( 1 )
 walk_speed = 20000
 
 [node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+editor/display_folded = true
 
 [node name="Sprite" type="Sprite" parent="KinematicBody2D"]
 visible = false
