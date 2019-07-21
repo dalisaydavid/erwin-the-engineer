@@ -1,0 +1,145 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://scripts/SceneMenu.gd" type="Script" id=1]
+[ext_resource path="res://assets/Machine Madness.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://assets/Machine Madness.otf" type="DynamicFontData" id=3]
+[ext_resource path="res://assets/darkforest.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://assets/erwin.png" type="Texture" id=5]
+[ext_resource path="res://assets/vortex_gun.png" type="Texture" id=6]
+[ext_resource path="res://assets/Merlin_-_01_-_To_a_Higher_Dimension_GWJ_July.ogg" type="AudioStream" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+size = 64
+outline_size = 2
+outline_color = Color( 0.0431373, 0.0431373, 0.0431373, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 36
+outline_size = 3
+outline_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+font_data = ExtResource( 4 )
+
+[sub_resource type="Animation" id=4]
+length = 0.6
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("BodySprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 138.069, 182.028 ), Vector2( 988.069, 182.028 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("BodySprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 6, 7, 8, 10 ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.6
+loop = true
+step = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath("GunSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.093803, 0.3, 0.45, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 1, 2, 3, 4 ]
+}
+
+[node name="Root" type="Node2D"]
+script = ExtResource( 1 )
+next_scene_path = "res://scenes/Scene0.tscn"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -393.0
+margin_top = -54.5
+margin_right = 393.0
+margin_bottom = 54.5
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer"]
+margin_right = 786.0
+margin_bottom = 74.0
+custom_fonts/font = SubResource( 1 )
+text = "Erwin The Engineer"
+align = 1
+valign = 1
+
+[node name="Label3" type="Label" parent="CanvasLayer/VBoxContainer"]
+margin_top = 78.0
+margin_right = 786.0
+margin_bottom = 97.0
+custom_fonts/font = SubResource( 2 )
+text = "by urodela, costa, and merlin.dominion."
+align = 1
+valign = 1
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/VBoxContainer"]
+margin_top = 101.0
+margin_right = 786.0
+margin_bottom = 105.0
+
+[node name="Label2" type="Label" parent="CanvasLayer/VBoxContainer"]
+margin_top = 109.0
+margin_right = 786.0
+margin_bottom = 184.0
+custom_fonts/font = SubResource( 3 )
+text = "Thank you for playing our game! We hope to make several more levels in the future. "
+align = 1
+valign = 1
+autowrap = true
+
+[node name="BodySprite" type="Sprite" parent="."]
+position = Vector2( 98.0686, 152.028 )
+scale = Vector2( 5, 5 )
+texture = ExtResource( 5 )
+flip_h = true
+hframes = 11
+frame = 6
+
+[node name="BodyAnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Move = SubResource( 4 )
+
+[node name="GunSprite" type="Sprite" parent="."]
+position = Vector2( 105.291, 183.952 )
+scale = Vector2( 5, 5 )
+texture = ExtResource( 6 )
+flip_h = true
+hframes = 5
+frame = 4
+
+[node name="GunAnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Shoot = SubResource( 5 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+autoplay = true

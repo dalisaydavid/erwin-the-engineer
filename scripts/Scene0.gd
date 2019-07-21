@@ -47,7 +47,11 @@ func check_scene_finished():
 
 func _on_Player_dimension_changed():
 	is_friendly_dimension_on = not is_friendly_dimension_on
+
+func game_over():
+	Global.game_over_from_death = true
+	get_tree().change_scene('res://scenes/SceneMenuFinish.tscn')
 	
 func _on_countdown_timer_timeout():
-	get_tree().quit()
+	game_over()
 	

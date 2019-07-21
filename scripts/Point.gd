@@ -31,5 +31,6 @@ func _on_RiseEffect_tween_completed(object, key):
 
 func _on_CollectArea_body_entered(body):
 	if body.get_parent().get_name () == 'Player':
-		body.get_parent().increase_ammo()
-		queue_free()
+		if body.get_parent().can_increase_health(1):
+			body.get_parent().increase_health(1)
+			queue_free()

@@ -67,11 +67,7 @@ func implode_object(object, number_total_bodies):
 			root.add_child(new_point)
 			new_point.global_position = object.get_node('KinematicBody2D').global_position
 
-	if object.has_node('AnimationPlayer'):
-#		object.get_node('AnimationPlayer').play('Fall')
-		object.play_fall_animation()
-	else:
-		object.queue_free()
+	object.get_node('AnimationPlayer').play('Fall')
 
 func implode():
 	var bodies_in_dimension_hole = $KinematicBody2D/DimensionHole.get_overlapping_bodies()

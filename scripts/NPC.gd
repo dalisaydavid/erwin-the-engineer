@@ -124,7 +124,6 @@ func _on_DamageArea_body_entered(body):
 		body.get_parent().damage(1)
 		
 func play_fall_animation():
-	print('FALLING')
 	is_alive = false
 	play_animation('Fall')
 
