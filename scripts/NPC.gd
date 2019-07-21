@@ -18,6 +18,7 @@ var is_following
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
 	set_physics_process(true)
 	get_tree().get_root().get_node('Root/Player').connect('dimension_changed', self, '_on_Player_dimension_changed')
 	get_tree().get_root().get_node('Root/Start').connect('player_started', self, 'can_follow')
@@ -28,8 +29,6 @@ func _ready():
 	
 	$MoveTimer.wait_time = (randi() % wait_time)+1
 	$MoveTimer.connect('timeout', self, '_on_MoveTimer_timeout')
-	
-	$AnimationPlayer.play('Jump')
 	
 	if player_path:
 		player = get_node(player_path)
@@ -54,6 +53,7 @@ func follow_move(delta):
 	$KinematicBody2D.move_and_slide(dir*walk_speed) 
 
 func move_on_path(delta):
+	
 	if not is_alive:
 		return
 		
@@ -71,6 +71,8 @@ func move_on_path(delta):
 		$KinematicBody2D/AliveSprite.flip_h = false
 	else:
 		$KinematicBody2D/AliveSprite.flip_h = true
+	
+	detect_state(velocity)
 	$KinematicBody2D.move_and_slide(velocity)
 
 
@@ -86,12 +88,15 @@ func random():
     return randi()%21 - 10 # range is -10 to 10
 
 func random_move():
-	$KinematicBody2D.move_and_slide(direction*walk_speed)
+	var	velocity = direction*walk_speed
+	detect_state(velocity)
+	$KinematicBody2D.move_and_slide(velocity)
 
 	if direction.x < 0:
 		$KinematicBody2D/AliveSprite.flip_h = false
 	else:
 		$KinematicBody2D/AliveSprite.flip_h = true
+
 
 func show_sprite_types():
 	$KinematicBody2D/AliveSprite.set_visible(is_alive)
@@ -124,7 +129,7 @@ func _on_DamageArea_body_entered(body):
 		body.get_parent().damage(1)
 		
 func play_fall_animation():
-	$AnimationPlayer.play('Fall')
+	play_animation('Fall')
 
 func _on_AnimationPlayer_animation_finished(anim_name):
 	if anim_name == 'Fall':
@@ -135,4 +140,15 @@ func _on_AnimationPlayer_animation_started(anim_name):
 
 func _on_EarshotArea_body_entered(body):
 	pass
-		
+	
+func detect_state(velocity):
+	if abs(velocity.x) > 0.01 or abs(velocity.y) > 0.01:
+		play_animation('Jump')
+	else:
+		if $AnimationPlayer.current_animation != 'Fall':
+			play_animation('Idle')
+	
+func play_animation(anim):
+	if $AnimationPlayer.current_animation != anim:
+		$AnimationPlayer.play(anim)
+

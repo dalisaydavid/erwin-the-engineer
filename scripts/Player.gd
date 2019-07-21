@@ -186,6 +186,10 @@ func handle_movement():
 	else:
 		update_pressed('down')
 	
+	# if none was pressed
+	if keys_pressed.size() == 0:
+		return
+		
 	# Handle only last input
 	var last_pressed = keys_pressed.back()
 	if last_pressed:

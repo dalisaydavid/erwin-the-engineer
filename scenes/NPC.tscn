@@ -8,7 +8,7 @@
 radius = 18.7086
 height = 11.5088
 
-[sub_resource type="CapsuleShape2D" id=7]
+[sub_resource type="CapsuleShape2D" id=2]
 radius = 17.3048
 height = 9.62003
 
@@ -31,6 +31,7 @@ tracks/0/keys = {
 }
 
 [sub_resource type="Animation" id=5]
+length = 0.5
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("KinematicBody2D/AliveSprite:frame")
@@ -39,13 +40,14 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.9 ),
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3, 4 ]
 }
 
 [sub_resource type="Animation" id=6]
+length = 0.6
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("KinematicBody2D/AliveSprite:frame")
@@ -54,15 +56,15 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.15, 0.3, 0.45, 0.6 ),
+"times": PoolRealArray( 0, 0.1, 0.3, 0.4, 0.5 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 4, 5, 6, 7, 8 ]
+"values": [ 5, 6, 7, 8, 4 ]
 }
 
 [node name="NPC" type="Node2D" groups=[
-"npc",
 "black_holeable",
+"npc",
 ]]
 script = ExtResource( 1 )
 
@@ -81,7 +83,7 @@ scale = Vector2( 2, 2 )
 z_index = 3
 texture = ExtResource( 2 )
 hframes = 17
-frame = 8
+frame = 4
 
 [node name="ObjectSprite" type="Sprite" parent="KinematicBody2D"]
 visible = false
@@ -95,7 +97,7 @@ region_rect = Rect2( 50, 130, 12, 12 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
 position = Vector2( -4, 5 )
 rotation = 1.5708
-shape = SubResource( 7 )
+shape = SubResource( 2 )
 
 [node name="EarshotArea" type="Area2D" parent="KinematicBody2D"]
 
