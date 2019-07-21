@@ -41,15 +41,20 @@ func _physics_process(delta):
 	motion = velocity * delta
 	
 	if velocity.x == 0 and velocity.y == 0:
-		$ErwinBodyAnimationPlayer.play('Idle')
+		pass
 	elif last_direction == 'left':
 		$KinematicBody2D/ErwinBody.flip_h = false
 		$KinematicBody2D/ErwinGun.flip_h = false
-		$ErwinBodyAnimationPlayer.play('Move')
+
 	elif last_direction == 'right':
 		$KinematicBody2D/ErwinBody.flip_h = true
 		$KinematicBody2D/ErwinGun.flip_h = true
-		$ErwinBodyAnimationPlayer.play('Move')
+
+		
+	if abs(velocity.x) > 0.01 or abs(velocity.y) > 0.01:
+		play_animation('Move')
+	else:
+		play_animation('Idle')
 		
 	$KinematicBody2D.move_and_slide(motion)
 
@@ -188,3 +193,8 @@ func _on_BlinkRange_mouse_entered():
 
 func _on_BlinkRange_mouse_exited():
 	mouse_in_blink_range = false
+
+
+func play_animation(anim):
+	if $ErwinBodyAnimationPlayer.current_animation != anim:
+		$ErwinBodyAnimationPlayer.play(anim)
